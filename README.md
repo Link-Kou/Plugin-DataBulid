@@ -26,7 +26,6 @@
 @Mappers
 public interface TestInterface {
 
-
     @MapperImpl(BulidAsingleField.class)
     TestUserDTO tostring3(@Regexs TestUserDomain num);
 
@@ -37,4 +36,9 @@ public interface TestInterface {
 
 > ##### 说明文档：
 1.请勿在生产环境中使用
+
+
+## 开源推荐
+- `selma` bean转换工具：[http://www.selma-java.org](http://www.selma-java.org)
+- `mapstruct` bean转换工具：[https://mapstruct.org/](https://mapstruct.org/)
 
