@@ -1,17 +1,22 @@
 package com.github.linkkou.databulid.extension.asinglefield.annotation;
 
+import com.github.linkkou.databulid.annotation.MapperImpl;
 import com.github.linkkou.databulid.utils.AnnotationUtils;
 import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Symbol;
 import sun.tools.tree.NullExpression;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * 获取到{@link Regexs}注解，并且对注解解析
+ *
  * @author lk
  * @version 1.0
  * @date 2019/10/5 16:03
@@ -21,15 +26,43 @@ public class RegexsParsing {
     /**
      * 解析{@link Regexs}注解
      *
-     * @param methodParameter
+     * @param methodParameter |
+     * @return RegexsEntity | null
      */
-    public static RegexsEntity getRegexs(VariableElement methodParameter) throws ClassNotFoundException {
+    public static RegexsEntity getRegexs(VariableElement methodParameter) {
         final HashMap<String, AnnotationMirror> parametersAnnotation = AnnotationUtils.getParametersAnnotation(methodParameter);
         final AnnotationMirror annotationMirror = parametersAnnotation.get(Regexs.class.getName());
+        return getRegexs(annotationMirror);
+    }
+
+    /**
+     * 解析方法上面{@link Regexs}注解
+     *
+     * @param mapperMethods |
+     * @return RegexsEntity | null
+     */
+    public static RegexsEntity getRegexs(ExecutableElement mapperMethods) {
+        if (mapperMethods instanceof Symbol.MethodSymbol) {
+            List<? extends AnnotationMirror> annotationMirrors = mapperMethods.getAnnotationMirrors();
+            for (AnnotationMirror annotationMirror : annotationMirrors) {
+                if (Regexs.class.getCanonicalName().equals(annotationMirror.getAnnotationType().asElement().toString())) {
+                    return getRegexs(annotationMirror);
+                }
+            }
+        }
+        return null;
+    }
+
+
+    private static RegexsEntity getRegexs(final AnnotationMirror annotationMirror) {
         if (null != annotationMirror) {
             RegexsEntity regexsEntity = new RegexsEntity();
             final HashMap<String, AnnotationValue> annotationParameters1 = AnnotationUtils.getAnnotationParameters(annotationMirror);
             for (Map.Entry<String, AnnotationValue> valueEntry : annotationParameters1.entrySet()) {
+                if ("matcher".equals(valueEntry.getKey())) {
+                    final String annotationValueForString = AnnotationUtils.getAnnotationValueForString(valueEntry.getValue());
+                    regexsEntity.setMatcher(annotationValueForString);
+                }
                 if ("replaceFirst".equals(valueEntry.getKey())) {
                     final List<Attribute> annotationValueForArray = AnnotationUtils.getAnnotationValueForArray(valueEntry.getValue());
                     final String[] strings = annotationValueForArray.stream().map((x) -> {
@@ -66,7 +99,6 @@ public class RegexsParsing {
             }
             return regexsEntity;
         }
-        throw new ClassNotFoundException("@Regexs is Null");
-        //return null;
+        return null;
     }
 }

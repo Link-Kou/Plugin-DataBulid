@@ -73,12 +73,7 @@ public class BulidAsingleField implements DataBuildSpi {
      */
     private List<ParametersEntity> parsingParameters() {
         ParsingParameters parsingParameters = new ParsingParameters(executableElement, processingEnv);
-        try {
-            return parsingParameters.parsing();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new NullPointerException(e.getMessage());
-        }
+        return parsingParameters.parsing();
     }
 
 }

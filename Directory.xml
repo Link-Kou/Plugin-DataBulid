@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<trees properties="/src/main/java/com/httpurl.properties" code="Ops_.+\.Code$" codeval="1[0-9]{4}" msg="Ops_.+\.Msg$">
-    <model path="/src/main" title="数据转换" subpath="/java/com/plugin" tooltip="<b>Code:8*****</b>" properties="" code="Ops_.+\.Code$" codeval="1[0-9]{4}" msg="Ops_.+" >
-    	<tree path="/databulid" title="配置-xy" tooltip="<b>Code:7*****</b>" >
-        	<tree path="/annotation" title="注解管理" tooltip="<b>Code:1**8*</b>"/>
-        	<tree path="/beetl" title="模板生成" tooltip="<b>Code:1**8*</b>"/>
-    	</tree>
-	</model>
+<trees properties="/src/main/java/com/httpurl.properties" code="" codeval="" msg="">
+    <model path="/DataBuild-All" title="基础" subpath="" tooltip="<b>Code:8*****</b>" properties="" code="" codeval=""
+           msg="">
+        <tree path="/src/main/java/com/github/linkkou/databulid" title="配置-xy" tooltip="<b>Code:7*****</b>">
+            <tree path="/annotation" title="注解管理" tooltip="<b>Code:1**8*</b>"/>
+            <tree path="/beetl" title="模板生成" tooltip="<b>Code:1**8*</b>"/>
+        </tree>
+    </model>
+    <model path="/DataBuild-Core" title="数据转换核心" subpath="" tooltip="" properties="" code="" codeval="" msg="">
+        <tree path="/src/main/java/com/github/linkkou/databulid" title="" tooltip="<b>Code:7*****</b>">
+            <tree path="/annotation" title="注解" tooltip="<b>Code:1**8*</b>"/>
+            <tree path="/impl" title="实现" tooltip="<b>Code:1**8*</b>"/>
+        </tree>
+    </model>
 </trees>

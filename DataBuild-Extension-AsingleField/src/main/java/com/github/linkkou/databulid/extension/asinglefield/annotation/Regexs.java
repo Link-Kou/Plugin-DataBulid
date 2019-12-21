@@ -7,25 +7,42 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 注解
+ * 注解为核心注解,默认可以不写
+ * 不写将采用默认
  *
  * @author lk
  * @version 1.0
  * @date 2019/10/2 15:01
  */
-@Target({ElementType.PARAMETER})
+@Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
 public @interface Regexs {
 
     /**
-     * 对所有字段进行首字母去除
+     * 将以此作为匹配来源
+     * <p>
+     * 不写 Regexs 注解情况下，参数默认采用
+     * <p>输入参数默认匹配(get|is|to)开头</p>
+     * <p>返回参数默认匹配(set)开头</p>
      *
      * @return |
      */
-    String[] replaceFirst() default {"(get|is)", "^F"};
+    String matcher() default "";
 
     /**
-     * 单独实现字段名称直接对应,匹配上优先执行
+     * 依次执行对所有方法进行首字母去除
+     * <p>
+     * 不写 Regexs 注解情况下，参数默认采用
+     * <p>输入参数默认匹配(get|is|to)开头</p>
+     * <p>返回参数默认匹配(set)开头</p>
+     *
+     * @return |
+     */
+    String[] replaceFirst() default {};
+
+    /**
+     * 单独实现字段名称直接对应
+     * 如果方法写入而且匹配到了,replaceFirst将不再执行
      *
      * @return |
      */

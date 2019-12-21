@@ -84,7 +84,7 @@ public class AnnotationUtils {
 
 
     /**
-     * 批量获取所有注解与值
+     * 批量获取所有注解与值（包含默认参数）
      *
      * @param mirrorHashMap
      * @return
@@ -99,7 +99,7 @@ public class AnnotationUtils {
 
 
     /**
-     * 获取注解与值
+     * 获取注解与值（包含默认参数）
      *
      * @param annotationMirror 对象
      * @return HashMap<String, AnnotationValue>  注解名称，注解值

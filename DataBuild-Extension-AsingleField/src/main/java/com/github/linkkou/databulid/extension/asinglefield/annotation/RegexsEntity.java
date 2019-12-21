@@ -8,6 +8,11 @@ package com.github.linkkou.databulid.extension.asinglefield.annotation;
 public class RegexsEntity {
 
     /**
+     * 将以此作为匹配来源
+     */
+    String matcher;
+
+    /**
      * 对所有字段进行首字母去除
      */
     String[] replaceFirst;
@@ -23,6 +28,15 @@ public class RegexsEntity {
      * false:进行大写处理
      */
     Boolean replaceFirstCapital;
+
+    public String getMatcher() {
+        return matcher;
+    }
+
+    public RegexsEntity setMatcher(String matcher) {
+        this.matcher = matcher;
+        return this;
+    }
 
     public String[] getReplaceFirst() {
         return replaceFirst;

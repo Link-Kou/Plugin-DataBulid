@@ -11,12 +11,15 @@ import com.github.linkkou.databulid.utils.ParametersUtils;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
+ * 解析方法的参数
+ *
  * @author lk
  * @version 1.0
  * @date 2019/10/5 14:25
@@ -27,9 +30,11 @@ public class ParsingParameters {
 
     private ProcessingEnvironment processingEnv;
 
-    private static final String GETTER_FORMAT = "(get|is)(.*)";
+    private static final String GETTER_FORMAT = "(get|is|to)(.*)";
 
     private static final Pattern GETTER_PATTERN = Pattern.compile(GETTER_FORMAT);
+
+    private static final String[] GETTER_FIRST_FORMAT = new String[]{"(get|is|to)", "^F"};
 
     public ParsingParameters(ExecutableElement executableElement, ProcessingEnvironment processingEnv) {
         this.executableElement = executableElement;
@@ -37,36 +42,40 @@ public class ParsingParameters {
     }
 
 
-    public List<ParametersEntity> parsing() throws ClassNotFoundException {
+    public List<ParametersEntity> parsing() {
         final List<? extends VariableElement> methodParameters = MethodUtils.getMethodParameters(this.executableElement);
         List<ParametersEntity> parametersEntitys = new ArrayList<ParametersEntity>();
         for (VariableElement methodParameter : methodParameters) {
             final RegexsEntity regexs = RegexsParsing.getRegexs(methodParameter);
             final ArrayList<ExecutableElement> classAllMembersByPublicAndName = ClassUtils.getClassAllMembersByPublicAndName(processingEnv, ClassUtils.getClassType(ParametersUtils.getParametersType(methodParameter)), GETTER_PATTERN);
             final List<ParametersEntity.VariableMethodParameter> collect = classAllMembersByPublicAndName.stream().map(x -> {
-                ParametersEntity.VariableMethodParameter parameter = new ParametersEntity.VariableMethodParameter();
                 String s1 = x.getSimpleName().toString();
-                parameter.setOriginalMethodName(s1);
-                boolean replaceFirst = true;
-                for (RegexsEntity.RegexEntity regexEntity : regexs.getReplaceFirstMap()) {
-                    if (s1.equals(regexEntity.getMethodsName())) {
-                        replaceFirst = false;
-                        for (String s : regexEntity.getRegex()) {
-                            s1 = s1.replaceAll(s, "");
+                String sreplaceFirst1 = s1;
+                if (null != regexs) {
+                    for (String s : regexs.getReplaceFirst()) {
+                        sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
+                    }
+                    for (RegexsEntity.RegexEntity regexEntity : regexs.getReplaceFirstMap()) {
+                        if (s1.equals(regexEntity.getMethodsName())) {
+                            for (String s : regexEntity.getRegex()) {
+                                sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
+                            }
                         }
                     }
-                }
-                if (replaceFirst) {
-                    for (String s : regexs.getReplaceFirst()) {
-                        s1 = s1.replaceAll(s, "");
+                    if (regexs.getReplaceFirstCapital()) {
+                        sreplaceFirst1 = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst1);
+                    } else {
+                        sreplaceFirst1 = StringAsingUtils.toLowerCaseFirstOne(sreplaceFirst1);
                     }
-                }
-                if (regexs.getReplaceFirstCapital()) {
-                    s1 = StringAsingUtils.toUpperCaseFirstOne(s1);
                 } else {
-                    s1 = StringAsingUtils.toLowerCaseFirstOne(s1);
+                    for (String s : GETTER_FIRST_FORMAT) {
+                        sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
+                    }
+                    sreplaceFirst1 = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst1);
                 }
-                parameter.setMatchingMethodName(s1);
+                ParametersEntity.VariableMethodParameter parameter = new ParametersEntity.VariableMethodParameter();
+                parameter.setOriginalMethodName(s1);
+                parameter.setMatchingMethodName(sreplaceFirst1);
                 return parameter;
             }).collect(Collectors.toList());
             ParametersEntity parametersEntity = new ParametersEntity();

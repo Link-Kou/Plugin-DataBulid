@@ -29,6 +29,9 @@ public interface TestInterface {
     @MapperImpl(BulidAsingleField.class)
     TestUserDTO tostring3(@Regexs TestUserDomain num);
 
+    @MapperImpl(BulidAsingleField.class)
+    TestUserDTO tostring4(TestUserDomain num);
+
 }
 ```
 
