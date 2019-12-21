@@ -1,7 +1,12 @@
 package com.github.linkkou.databulid.utils;
 
+import com.sun.tools.javac.code.Type;
+
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 参数工具类
@@ -32,6 +37,30 @@ public class ParametersUtils {
      */
     public static String getParametersName(VariableElement variableElement) {
         return variableElement.getSimpleName().toString();
+    }
+
+    /**
+     * 获取参数名称以及类型
+     *
+     * @param parameters
+     * @return
+     */
+    public static List<String> getParameters(List<? extends VariableElement> parameters) {
+        List<String> parameterlist = new ArrayList<>();
+        //HashMap<String, String> parametermap = new HashMap<>();
+        for (VariableElement variableElement : parameters) {
+            if (variableElement.asType() instanceof Type.AnnotatedType) {
+                //类型
+                parameterlist.add(((Type.AnnotatedType) variableElement.asType()).tsym.toString());
+            } else {
+                //类型
+                parameterlist.add(variableElement.asType().toString());
+            }
+            //名称
+            parameterlist.add(variableElement.getSimpleName().toString());
+            //parametermap.put(variableElement.getSimpleName().toString(), variableElement.asType().toString());
+        }
+        return parameterlist;
     }
 
 

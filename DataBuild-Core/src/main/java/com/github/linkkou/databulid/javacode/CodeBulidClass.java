@@ -50,10 +50,8 @@ public class CodeBulidClass {
      * @param elements         该类下的所有方法
      */
     public CodeBulidClass(ProcessingEnvironment processingEnv, TypeElement classtypeElement, List<ExecutableElement> elements) {
-
         //完整的class路,
         String classallpath = ((Symbol.ClassSymbol) classtypeElement).fullname.toString();
-
         this.processingEnv = processingEnv;
         this.type = processingEnv.getElementUtils().getTypeElement(classallpath);
         //package 路径

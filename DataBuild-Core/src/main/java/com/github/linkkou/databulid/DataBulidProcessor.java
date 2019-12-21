@@ -2,6 +2,8 @@ package com.github.linkkou.databulid;
 
 import com.github.linkkou.databulid.javacode.CodeBulidClass;
 import com.github.linkkou.databulid.annotation.Mappers;
+import com.github.linkkou.databulid.utils.ElementUtils;
+import com.github.linkkou.databulid.utils.MethodUtils;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -70,46 +72,12 @@ public class DataBulidProcessor extends AbstractProcessor {
      */
     private void findMethodsElement(RoundEnvironment roundEnv) {
         //从注解中找到所有的类,以及对应的注解的方法
-        List<Element> targetClassMap = findAnnoationElement(roundEnv);
+        List<Element> targetClassMap = ElementUtils.findAnnoationElement(roundEnv, Mappers.class);
         for (Element item : targetClassMap) {
             TypeElement classtypeElement = (TypeElement) item;
-            //过滤所有的系统的Methods
-            List<? extends Element> allMembers = processingEnv.getElementUtils().getAllMembers(classtypeElement);
-            List<? extends Element> methods = ElementFilter.methodsIn(allMembers);
-            List<ExecutableElement> elements = new ArrayList<>();
-            //所有的方法
-            for (Element method : methods) {
-                ExecutableElement executableElement = (ExecutableElement) method;
-                if (executableElement.getModifiers().contains(Modifier.ABSTRACT)) {
-                    //方法名称是存在重复的情况。ide工具会做出限制，所有不会相同方法名称并且参数一样的方法
-                    elements.add(executableElement);
-                }
-            }
+            List<ExecutableElement> elements = MethodUtils.getMethodModifiers(processingEnv, classtypeElement);
             new CodeBulidClass(processingEnv, classtypeElement, elements).createClass();
         }
-    }
-
-
-    /**
-     * 查询所有带有{@link Mappers 的注解的接口}
-     *
-     * @param roundEnvironment
-     * @return
-     */
-    private List<Element> findAnnoationElement(RoundEnvironment roundEnvironment) {
-        List<Element> targetClassMap = new ArrayList<>();
-        //找到所有跟AnDataCollect注解相关元素
-        Collection<? extends Element> anLogSet = roundEnvironment.getElementsAnnotatedWith(Mappers.class);
-        //遍历所有元素
-        for (Element e : anLogSet) {
-            //接口类型
-            if (e.getKind() != ElementKind.INTERFACE) {
-                continue;
-            }
-            //对类做一个缓存
-            targetClassMap.add(e);
-        }
-        return targetClassMap;
     }
 
 }

@@ -3,6 +3,7 @@ package com.github.linkkou.databulid.extension.asinglefield;
 import com.github.linkkou.databulid.extension.asinglefield.entity.ParametersEntity;
 import com.github.linkkou.databulid.extension.asinglefield.parsing.ParsingParameters;
 import com.github.linkkou.databulid.extension.asinglefield.parsing.ParsingReturn;
+import com.github.linkkou.databulid.impl.DefaultCode;
 import com.github.linkkou.databulid.spi.DataBuildSpi;
 import com.github.linkkou.databulid.utils.AnnotationUtils;
 import com.github.linkkou.databulid.utils.ClassUtils;
@@ -38,16 +39,18 @@ public class BulidAsingleField implements DataBuildSpi {
     private static final Pattern SETTER_PATTERN = Pattern.compile(SETTER_FORMAT);
 
     @Override
-    public String getCode(ExecutableElement executableElement, ProcessingEnvironment processingEnv) {
+    public String getCode(DefaultCode defaultCode, ExecutableElement executableElement, ProcessingEnvironment processingEnv) {
         this.executableElement = executableElement;
         this.processingEnv = processingEnv;
-        final ParametersEntity parametersEntity = parsingReturn();
-        final ParametersEntity parametersEntity1 = parsingParameters();
+        final ParametersEntity parametersEntity = parsingReturn(defaultCode);
+        final List<ParametersEntity> parametersEntity1 = parsingParameters();
         parametersEntity.getVariableMethodParameterList().stream().forEach(x -> {
-            parametersEntity1.getVariableMethodParameterList().stream().forEach(x1 -> {
-                if (x.getMatchingMethodName().equals(x1.getMatchingMethodName())) {
-                    stringBuilder.append(String.format("%s.%s(%s.%s());", parametersEntity.getName(), x.getOriginalMethodName(), parametersEntity1.getName(), x1.getOriginalMethodName()));
-                }
+            parametersEntity1.forEach(x1 -> {
+                x1.getVariableMethodParameterList().stream().forEach(x2 -> {
+                    if (x.getMatchingMethodName().equals(x2.getMatchingMethodName())) {
+                        stringBuilder.append(String.format("%s.%s(%s.%s());", parametersEntity.getName(), x.getOriginalMethodName(), x1.getName(), x2.getOriginalMethodName()));
+                    }
+                });
             });
         });
         stringBuilder.append(String.format("return %s", parametersEntity.getName()));
@@ -58,15 +61,24 @@ public class BulidAsingleField implements DataBuildSpi {
     /**
      * 获取方法返回的对象
      */
-    private ParametersEntity parsingReturn() {
-        ParsingReturn parsingReturn = new ParsingReturn(executableElement, processingEnv, stringBuilder);
+    private ParametersEntity parsingReturn(DefaultCode defaultCode) {
+        ParsingReturn parsingReturn = new ParsingReturn(defaultCode,executableElement, processingEnv, stringBuilder);
         return parsingReturn.parsing();
     }
 
-
-    private ParametersEntity parsingParameters() {
+    /**
+     * 获取到参数
+     *
+     * @return
+     */
+    private List<ParametersEntity> parsingParameters() {
         ParsingParameters parsingParameters = new ParsingParameters(executableElement, processingEnv);
-        return parsingParameters.parsing();
+        try {
+            return parsingParameters.parsing();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
     }
 
 }

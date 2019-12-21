@@ -34,7 +34,7 @@ public @interface Regexs {
     /**
      * 是否对替换后的剩余名称首字母进行大写或小写处理
      * true:进行大写处理（默认）
-     * false:进行大写处理
+     * false:不进行大写处理
      *
      * @return |
      */
@@ -50,7 +50,7 @@ public @interface Regexs {
     public @interface Regex {
 
         /**
-         * 排除变量或方法
+         * 匹配的方法名称
          *
          * @return
          */

@@ -1,6 +1,7 @@
 package com.github.linkkou.databulid.extension.asinglefield.parsing;
 
 import com.github.linkkou.databulid.extension.asinglefield.entity.ParametersEntity;
+import com.github.linkkou.databulid.impl.DefaultCode;
 import com.github.linkkou.databulid.utils.ClassUtils;
 import com.github.linkkou.databulid.utils.MethodUtils;
 
@@ -33,17 +34,21 @@ public class ParsingReturn {
 
     private StringBuilder stringBuilder;
 
+    private DefaultCode defaultCode;
 
-    public ParsingReturn(ExecutableElement executableElement, ProcessingEnvironment processingEnv, StringBuilder stringBuilder) {
+
+    public ParsingReturn(DefaultCode defaultCode, ExecutableElement executableElement, ProcessingEnvironment processingEnv, StringBuilder stringBuilder) {
         this.executableElement = executableElement;
         this.processingEnv = processingEnv;
         this.stringBuilder = stringBuilder;
+        this.defaultCode = defaultCode;
     }
 
     public ParametersEntity parsing() {
         final TypeMirror methodReturn = MethodUtils.getMethodReturn(this.executableElement);
         final String classTypePath = ClassUtils.getClassTypePath(methodReturn);
-        stringBuilder.append(String.format("%s returnlocalvar = new %s();", classTypePath, classTypePath));
+        defaultCode.getCreateDefaultCode(stringBuilder, "returnlocalvar", classTypePath);
+        //stringBuilder.append(String.format("%s returnlocalvar = new %s();", classTypePath, classTypePath));
         final ArrayList<ExecutableElement> classAllMembersByPublicAndName = ClassUtils.getClassAllMembersByPublicAndName(processingEnv, ClassUtils.getClassType(methodReturn), SETTER_PATTERN);
         ParametersEntity parametersEntity = new ParametersEntity();
         parametersEntity.setName("returnlocalvar");

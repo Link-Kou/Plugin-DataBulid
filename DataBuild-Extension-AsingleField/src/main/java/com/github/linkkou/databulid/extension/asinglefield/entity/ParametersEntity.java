@@ -3,6 +3,7 @@ package com.github.linkkou.databulid.extension.asinglefield.entity;
 import java.util.List;
 
 /**
+ * 方法参数的实体
  * @author lk
  * @version 1.0
  * @date 2019/10/5 14:27

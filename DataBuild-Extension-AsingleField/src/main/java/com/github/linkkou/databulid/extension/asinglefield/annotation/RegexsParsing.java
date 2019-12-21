@@ -2,6 +2,7 @@ package com.github.linkkou.databulid.extension.asinglefield.annotation;
 
 import com.github.linkkou.databulid.utils.AnnotationUtils;
 import com.sun.tools.javac.code.Attribute;
+import sun.tools.tree.NullExpression;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -22,7 +23,7 @@ public class RegexsParsing {
      *
      * @param methodParameter
      */
-    public static RegexsEntity getRegexs(VariableElement methodParameter) {
+    public static RegexsEntity getRegexs(VariableElement methodParameter) throws ClassNotFoundException {
         final HashMap<String, AnnotationMirror> parametersAnnotation = AnnotationUtils.getParametersAnnotation(methodParameter);
         final AnnotationMirror annotationMirror = parametersAnnotation.get(Regexs.class.getName());
         if (null != annotationMirror) {
@@ -65,6 +66,7 @@ public class RegexsParsing {
             }
             return regexsEntity;
         }
-        return null;
+        throw new ClassNotFoundException("@Regexs is Null");
+        //return null;
     }
 }

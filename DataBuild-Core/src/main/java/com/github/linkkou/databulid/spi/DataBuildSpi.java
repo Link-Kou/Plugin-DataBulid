@@ -1,5 +1,7 @@
 package com.github.linkkou.databulid.spi;
 
+import com.github.linkkou.databulid.impl.DefaultCode;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 
@@ -10,5 +12,5 @@ import javax.lang.model.element.ExecutableElement;
  */
 public interface DataBuildSpi {
 
-    public String getCode(ExecutableElement executableElement, ProcessingEnvironment processingEnv);
+    public String getCode(DefaultCode defaultCode, ExecutableElement executableElement, ProcessingEnvironment processingEnv);
 }

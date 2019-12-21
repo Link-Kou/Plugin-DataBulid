@@ -37,9 +37,9 @@ public class ParsingParameters {
     }
 
 
-    public ParametersEntity parsing() {
+    public List<ParametersEntity> parsing() throws ClassNotFoundException {
         final List<? extends VariableElement> methodParameters = MethodUtils.getMethodParameters(this.executableElement);
-        ParametersEntity parametersEntity = new ParametersEntity();
+        List<ParametersEntity> parametersEntitys = new ArrayList<ParametersEntity>();
         for (VariableElement methodParameter : methodParameters) {
             final RegexsEntity regexs = RegexsParsing.getRegexs(methodParameter);
             final ArrayList<ExecutableElement> classAllMembersByPublicAndName = ClassUtils.getClassAllMembersByPublicAndName(processingEnv, ClassUtils.getClassType(ParametersUtils.getParametersType(methodParameter)), GETTER_PATTERN);
@@ -69,10 +69,12 @@ public class ParsingParameters {
                 parameter.setMatchingMethodName(s1);
                 return parameter;
             }).collect(Collectors.toList());
+            ParametersEntity parametersEntity = new ParametersEntity();
             parametersEntity.setName(ParametersUtils.getParametersName(methodParameter));
             parametersEntity.setVariableMethodParameterList(collect);
+            parametersEntitys.add(parametersEntity);
         }
-        return parametersEntity;
+        return parametersEntitys;
     }
 
 
