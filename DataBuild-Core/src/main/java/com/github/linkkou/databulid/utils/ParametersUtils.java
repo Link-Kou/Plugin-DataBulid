@@ -1,8 +1,6 @@
 package com.github.linkkou.databulid.utils;
 
 import com.sun.tools.javac.code.Type;
-
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
@@ -58,7 +56,6 @@ public class ParametersUtils {
             }
             //名称
             parameterlist.add(variableElement.getSimpleName().toString());
-            //parametermap.put(variableElement.getSimpleName().toString(), variableElement.asType().toString());
         }
         return parameterlist;
     }

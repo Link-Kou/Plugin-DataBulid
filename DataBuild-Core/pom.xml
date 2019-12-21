@@ -33,5 +33,22 @@
 
     <build>
         <finalName>${project.name}</finalName>
+        <plugins>
+            <!--说明项目架包版本-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>utf-8</encoding>
+                    <compilerArgument>-proc:none</compilerArgument>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
+
+
 </project>
+
+

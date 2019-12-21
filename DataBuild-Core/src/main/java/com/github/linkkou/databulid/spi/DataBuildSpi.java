@@ -6,6 +6,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 
 /**
+ * 扩展机制
  * @author lk
  * @version 1.0
  * @date 2019/10/2 17:57

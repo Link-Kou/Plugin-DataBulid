@@ -20,20 +20,24 @@
 
    无
    
-### 一、示列
+### 一、示列(已实现)
 
 ```java：
+//多个实体转换为单一实体
 @Mappers
 public interface TestInterface {
 
     @MapperImpl(BulidAsingleField.class)
-    TestUserDTO tostring3(@Regexs TestUserDomain num);
+    TestUserDTO tos3(@Regexs TestUserDomain user);
 
     @MapperImpl(BulidAsingleField.class)
-    TestUserDTO tostring4(TestUserDomain num);
+    TestUserDTO tos4(TestUserDomain user,TestUserDomain2 user2);
 
 }
 ```
+
+
+
 
 ### 二、说明
 
