@@ -12,7 +12,11 @@
 
  ```xml：
 
- 暂时不支持
+ <dependency>
+   <groupId>com.github.link-kou</groupId>
+   <artifactId>databulid-all</artifactId>
+   <version>1.0.0</version>
+ </dependency>
 
  ```
 
