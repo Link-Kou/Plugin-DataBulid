@@ -47,24 +47,27 @@ public class CodeBulidCode extends CodeBulidExtension {
     public void createCode(ExecutableElement executableElement, final List<String> parameterlist) {
         final Attribute.Class methodMapperImpl = AnnotationUtils.getMethodMapperImpl(executableElement);
         String code1 = null;
+        DefaultCode defaultCode = createDefaultCode(executableElement, parameterlist);
         try {
             if (null != methodMapperImpl) {
                 final DataBuildSpi dataBuildSpi = super.getDataBuildSpi(methodMapperImpl);
                 if (null != dataBuildSpi) {
-                    DefaultCode defaultCode = createDefaultCode(executableElement, parameterlist);
                     code1 = dataBuildSpi.getCode(defaultCode, executableElement, processingEnv);
                 }
             } else {
                 final DataBuildSpi dataBuildCustomAnnoSpi = super.getDataBuildCustomAnnoSpi(AnnotationUtils.getMethodAnnotation(executableElement));
                 if (null != dataBuildCustomAnnoSpi) {
-                    DefaultCode defaultCode = createDefaultCode(executableElement, parameterlist);
                     code1 = dataBuildCustomAnnoSpi.getCode(defaultCode, executableElement, processingEnv);
                 } else {
                     writer.emitSingleLineComment("方法上面没有可以用到的@MapperImpl注解或指定实现的注解@MapperConfig");
                 }
             }
             if (null == code1 || 1 > code1.length()) {
-                code1 = "return null";
+                if (defaultCode.isDefault()) {
+                    code1 = defaultCode.getSuper();
+                } else {
+                    code1 = "return null";
+                }
             }
             writer.emitStatement(code1);
         } catch (Exception e) {

@@ -9,4 +9,8 @@ public interface DefaultCode {
 
     void getCreateDefaultCode(StringBuilder stringBuilder, String varName, String classTypePath);
 
+    boolean isDefault();
+
+
+    String getSuper();
 }
