@@ -55,7 +55,13 @@ public class CodeBulidCode extends CodeBulidExtension {
                     code1 = dataBuildSpi.getCode(defaultCode, executableElement, processingEnv);
                 }
             } else {
-                writer.emitSingleLineComment("方法上面没有可以用到的MapperImpl注解");
+                final DataBuildSpi dataBuildCustomAnnoSpi = super.getDataBuildCustomAnnoSpi(AnnotationUtils.getMethodAnnotation(executableElement));
+                if (null != dataBuildCustomAnnoSpi) {
+                    DefaultCode defaultCode = createDefaultCode(executableElement, parameterlist);
+                    code1 = dataBuildCustomAnnoSpi.getCode(defaultCode, executableElement, processingEnv);
+                } else {
+                    writer.emitSingleLineComment("方法上面没有可以用到的@MapperImpl注解或指定实现的注解@MapperConfig");
+                }
             }
             if (null == code1 || 1 > code1.length()) {
                 code1 = "return null";

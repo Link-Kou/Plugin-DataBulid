@@ -1,5 +1,7 @@
 package com.github.linkkou.databulid.extension.asinglefield;
 
+import com.github.linkkou.databulid.annotation.MapperConfig;
+import com.github.linkkou.databulid.extension.asinglefield.annotation.MappersField;
 import com.github.linkkou.databulid.extension.asinglefield.entity.ParametersEntity;
 import com.github.linkkou.databulid.extension.asinglefield.parsing.ParsingParameters;
 import com.github.linkkou.databulid.extension.asinglefield.parsing.ParsingReturn;
@@ -24,6 +26,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @date 2019/10/2 15:01
  */
+@MapperConfig(MappersField.class)
 public class BulidAsingleField implements DataBuildSpi {
 
 
@@ -62,7 +65,7 @@ public class BulidAsingleField implements DataBuildSpi {
      * 获取方法返回的对象
      */
     private ParametersEntity parsingReturn(DefaultCode defaultCode) {
-        ParsingReturn parsingReturn = new ParsingReturn(defaultCode,executableElement, processingEnv, stringBuilder);
+        ParsingReturn parsingReturn = new ParsingReturn(defaultCode, executableElement, processingEnv, stringBuilder);
         return parsingReturn.parsing();
     }
 
