@@ -66,15 +66,15 @@ public class CodeBulidClass {
     }
 
 
-    public void createClass() {
+    public void createClass() throws IOException, IllegalAccessException, InstantiationException {
         JavaWriter writer = createSourceFile("Impl");
         if (writer != null) {
             createMethod(this.elements, writer, processingEnv);
             try {
                 writer.endType();
                 writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+
             }
         }
     }
@@ -97,8 +97,8 @@ public class CodeBulidClass {
                 JavaWriter writer = new JavaWriter(sourceFile.openWriter());
                 return createClass(newclassnamepex, writer);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+
         }
         return null;
     }
@@ -115,8 +115,8 @@ public class CodeBulidClass {
             //创建类
             writer.beginType(newclassnamepex, "class", EnumSet.of(PUBLIC), null, classpath);
             return writer;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+
         }
         return null;
     }
@@ -129,7 +129,7 @@ public class CodeBulidClass {
      * @param writer
      * @param processingEnv
      */
-    private void createMethod(List<ExecutableElement> mapperMethods, JavaWriter writer, ProcessingEnvironment processingEnv) {
+    private void createMethod(List<ExecutableElement> mapperMethods, JavaWriter writer, ProcessingEnvironment processingEnv) throws IOException, InstantiationException, IllegalAccessException {
         CodeBulidMethod buildAsbMethod = new CodeBulidMethod(mapperMethods, writer, processingEnv);
         buildAsbMethod.createMethod();
     }

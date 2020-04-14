@@ -120,8 +120,8 @@ public class AnnotationUtils {
                             }
                         }
                     }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+
                 }
             }
         }

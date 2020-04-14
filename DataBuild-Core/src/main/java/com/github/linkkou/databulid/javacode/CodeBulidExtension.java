@@ -7,45 +7,35 @@ import com.sun.tools.javac.code.Attribute;
 import org.reflections.Reflections;
 
 import javax.lang.model.element.AnnotationMirror;
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 abstract class CodeBulidExtension {
-    /**
-     * 谷歌元反射
-     */
+
+    //TODO 异常打包报错的问题,不影响编译
     private static Reflections reflections = new Reflections();
 
-    protected DataBuildSpi getDataBuildSpi(Attribute.Class type) {
+    protected synchronized DataBuildSpi getDataBuildSpi(Attribute.Class type) throws IllegalAccessException, InstantiationException {
+
         final Set<Class<? extends DataBuildSpi>> subTypesOf = reflections.getSubTypesOf(DataBuildSpi.class);
         for (Class<? extends DataBuildSpi> aClass : subTypesOf) {
             if (aClass.getName().equals(type.classType.toString())) {
-                try {
-                    final DataBuildSpi dataBuildSpi = aClass.newInstance();
-                    return dataBuildSpi;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                final DataBuildSpi dataBuildSpi = aClass.newInstance();
+                return dataBuildSpi;
             }
         }
         return null;
     }
 
-    protected DataBuildSpi getDataBuildCustomAnnoSpi(HashMap<String, AnnotationMirror> v) {
-        final Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(MapperConfig.class);
-        final Iterator<Class<?>> iterator = typesAnnotatedWith.iterator();
-        while (iterator.hasNext()) {
-            final Class<?> next = iterator.next();
-            final MapperConfig annotation = next.getAnnotation(MapperConfig.class);
-            if (null != annotation) {
-                if (v.containsKey(annotation.value().getName())) {
-                    try {
-                        final DataBuildSpi dataBuildSpi = (DataBuildSpi) next.newInstance();
+    protected synchronized DataBuildSpi getDataBuildCustomAnnoSpi(final HashMap<String, AnnotationMirror> v) throws IllegalAccessException, InstantiationException {
+        if (v.size() > 0) {
+            final Set<Class<? extends DataBuildSpi>> subTypesOf = reflections.getSubTypesOf(DataBuildSpi.class);
+            for (Class<? extends DataBuildSpi> aClass : subTypesOf) {
+                final MapperConfig annotation = aClass.getAnnotation(MapperConfig.class);
+                if (null != annotation) {
+                    if (v.containsKey(annotation.value().getName())) {
+                        final DataBuildSpi dataBuildSpi = (DataBuildSpi) aClass.newInstance();
                         return dataBuildSpi;
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             }

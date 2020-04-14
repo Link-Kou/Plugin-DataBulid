@@ -44,35 +44,31 @@ public class CodeBulidCode extends CodeBulidExtension {
      *
      * @param executableElement 一个类里面单一的方法
      */
-    public void createCode(ExecutableElement executableElement, final List<String> parameterlist) {
+    public void createCode(ExecutableElement executableElement, final List<String> parameterlist) throws IOException, InstantiationException, IllegalAccessException {
         final Attribute.Class methodMapperImpl = AnnotationUtils.getMethodMapperImpl(executableElement);
         String code1 = null;
         DefaultCode defaultCode = createDefaultCode(executableElement, parameterlist);
-        try {
-            if (null != methodMapperImpl) {
-                final DataBuildSpi dataBuildSpi = super.getDataBuildSpi(methodMapperImpl);
-                if (null != dataBuildSpi) {
-                    code1 = dataBuildSpi.getCode(defaultCode, executableElement, processingEnv);
-                }
+        if (null != methodMapperImpl) {
+            final DataBuildSpi dataBuildSpi = super.getDataBuildSpi(methodMapperImpl);
+            if (null != dataBuildSpi) {
+                code1 = dataBuildSpi.getCode(defaultCode, executableElement, processingEnv);
+            }
+        } else {
+            final DataBuildSpi dataBuildCustomAnnoSpi = super.getDataBuildCustomAnnoSpi(AnnotationUtils.getMethodAnnotation(executableElement));
+            if (null != dataBuildCustomAnnoSpi) {
+                code1 = dataBuildCustomAnnoSpi.getCode(defaultCode, executableElement, processingEnv);
             } else {
-                final DataBuildSpi dataBuildCustomAnnoSpi = super.getDataBuildCustomAnnoSpi(AnnotationUtils.getMethodAnnotation(executableElement));
-                if (null != dataBuildCustomAnnoSpi) {
-                    code1 = dataBuildCustomAnnoSpi.getCode(defaultCode, executableElement, processingEnv);
-                } else {
-                    writer.emitSingleLineComment("方法上面没有可以用到的@MapperImpl注解或指定实现的注解@MapperConfig");
-                }
+                writer.emitSingleLineComment("方法上面没有可以用到的@MapperImpl注解或指定实现的注解@MapperConfig");
             }
-            if (null == code1 || 1 > code1.length()) {
-                if (defaultCode.isDefault()) {
-                    code1 = defaultCode.getSuper();
-                } else {
-                    code1 = "return null";
-                }
-            }
-            writer.emitStatement(code1);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        if (null == code1 || 1 > code1.length()) {
+            if (defaultCode.isDefault()) {
+                code1 = defaultCode.getSuper();
+            } else {
+                code1 = "return null";
+            }
+        }
+        writer.emitStatement(code1);
     }
 
     /**

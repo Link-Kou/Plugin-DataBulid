@@ -47,28 +47,24 @@ public class CodeBulidMethod extends CodeBulidExtension {
     /**
      * 创建方法
      */
-    public void createMethod() {
+    public void createMethod() throws IOException, IllegalAccessException, InstantiationException {
         for (ExecutableElement executableElement : mapperMethods) {
-            try {
-                //获取到所有的方法的参数(自动会导入指定的架包)
-                List<? extends VariableElement> parameters = executableElement.getParameters();
-                List<String> parameterlist = ParametersUtils.getParameters(parameters);
-                String[] parameterarray = new String[parameterlist.size()];
-                writer.emitAnnotation(Override.class);
-                writer.beginMethod(executableElement.getReturnType().toString(),
-                        executableElement.getSimpleName().toString(),
-                        EnumSet.of(PUBLIC),
-                        //单数 参数类型 双数 参数名称
-                        parameterlist.toArray(parameterarray));
-                //构建方法内的代码
-                CodeBulidCode codeBulidCode = new CodeBulidCode(writer, this.processingEnv);
-                codeBulidCode.createCode(executableElement, parameterlist);
-                //createCode(executableElement);
-                writer.endMethod();
-                writer.emitEmptyLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //获取到所有的方法的参数(自动会导入指定的架包)
+            List<? extends VariableElement> parameters = executableElement.getParameters();
+            List<String> parameterlist = ParametersUtils.getParameters(parameters);
+            String[] parameterarray = new String[parameterlist.size()];
+            writer.emitAnnotation(Override.class);
+            writer.beginMethod(executableElement.getReturnType().toString(),
+                    executableElement.getSimpleName().toString(),
+                    EnumSet.of(PUBLIC),
+                    //单数 参数类型 双数 参数名称
+                    parameterlist.toArray(parameterarray));
+            //构建方法内的代码
+            CodeBulidCode codeBulidCode = new CodeBulidCode(writer, this.processingEnv);
+            codeBulidCode.createCode(executableElement, parameterlist);
+            //createCode(executableElement);
+            writer.endMethod();
+            writer.emitEmptyLine();
         }
     }
 }
