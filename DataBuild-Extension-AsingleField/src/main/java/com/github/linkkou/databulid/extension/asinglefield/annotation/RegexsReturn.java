@@ -14,26 +14,14 @@ import java.lang.annotation.Target;
  * @version 1.0
  * @date 2019/10/2 15:01
  */
-@Target({ElementType.PARAMETER})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
-public @interface Regexs {
+public @interface RegexsReturn {
 
     /**
-     * 将以此作为匹配方法来源
+     * 返回参数,进行首字母去除
      * <p>
      * 不写 Regexs 注解情况下，参数默认采用
-     * <p>输入参数默认匹配(get|is|to)开头</p>
-     * <p>返回参数默认匹配(set)开头 不可更改</p>
-     *
-     * @return |
-     */
-    String matcher() default "";
-
-    /**
-     * 依次执行对所有输入参数,进行首字母去除
-     * <p>
-     * 不写 Regexs 注解情况下，参数默认采用
-     * <p>输入参数默认匹配(get|is|to) ^F 开头 替换后默认参数将不起作用</p>
      * <p>返回参数默认匹配(set)开头 不可更改</p>
      *
      * @return |
@@ -43,7 +31,7 @@ public @interface Regexs {
     /**
      * 单独实现字段名称处理
      * 如果方法写入而且匹配到了,replaceFirst将不再执行
-     * 对输入参数有效果
+     * 返回参数都有效果,可以替换默认(set)
      *
      * @return |
      */

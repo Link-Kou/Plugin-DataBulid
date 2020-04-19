@@ -49,20 +49,28 @@ public class ParametersEntity {
          * 处理后的匹配方法名称
          */
         private String matchingMethodName;
-
+        /**
+         * 方法名称
+         */
         public String getOriginalMethodName() {
             return originalMethodName;
         }
-
+        /**
+         * 方法名称
+         */
         public VariableMethodParameter setOriginalMethodName(String originalMethodName) {
             this.originalMethodName = originalMethodName;
             return this;
         }
-
+        /**
+         * 处理后的匹配方法名称
+         */
         public String getMatchingMethodName() {
             return matchingMethodName;
         }
-
+        /**
+         * 处理后的匹配方法名称
+         */
         public VariableMethodParameter setMatchingMethodName(String matchingMethodName) {
             this.matchingMethodName = matchingMethodName;
             return this;

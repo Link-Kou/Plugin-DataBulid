@@ -11,7 +11,6 @@ import com.github.linkkou.databulid.utils.ParametersUtils;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -51,15 +50,20 @@ public class ParsingParameters {
             final List<ParametersEntity.VariableMethodParameter> collect = classAllMembersByPublicAndName.stream().map(x -> {
                 String s1 = x.getSimpleName().toString();
                 String sreplaceFirst1 = s1;
+                for (String s : GETTER_FIRST_FORMAT) {
+                    sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
+                }
                 if (null != regexs) {
                     for (String s : regexs.getReplaceFirst()) {
                         sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
                     }
                     for (RegexsEntity.RegexEntity regexEntity : regexs.getReplaceFirstMap()) {
                         if (s1.equals(regexEntity.getMethodsName())) {
+                            String sreplaceFirstuser = s1;
                             for (String s : regexEntity.getRegex()) {
-                                sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
+                                sreplaceFirstuser = sreplaceFirstuser.replaceFirst(s, "");
                             }
+                            sreplaceFirst1 = sreplaceFirstuser;
                         }
                     }
                     if (regexs.getReplaceFirstCapital()) {
@@ -68,9 +72,6 @@ public class ParsingParameters {
                         sreplaceFirst1 = StringAsingUtils.toLowerCaseFirstOne(sreplaceFirst1);
                     }
                 } else {
-                    for (String s : GETTER_FIRST_FORMAT) {
-                        sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
-                    }
                     sreplaceFirst1 = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst1);
                 }
                 ParametersEntity.VariableMethodParameter parameter = new ParametersEntity.VariableMethodParameter();

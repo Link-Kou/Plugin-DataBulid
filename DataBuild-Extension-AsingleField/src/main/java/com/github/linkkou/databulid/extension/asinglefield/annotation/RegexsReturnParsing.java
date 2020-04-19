@@ -19,32 +19,32 @@ import java.util.Map;
  * @version 1.0
  * @date 2019/10/5 16:03
  */
-public class RegexsParsing {
+public class RegexsReturnParsing {
 
     /**
-     * 解析{@link Regexs}注解
+     * 解析{@link RegexsReturn}注解
      *
      * @param methodParameter |
      * @return RegexsEntity | null
      */
-    public static RegexsEntity getRegexs(VariableElement methodParameter) {
+    public static RegexsReturnEntity getRegexsReturn(VariableElement methodParameter) {
         final HashMap<String, AnnotationMirror> parametersAnnotation = AnnotationUtils.getParametersAnnotation(methodParameter);
-        final AnnotationMirror annotationMirror = parametersAnnotation.get(Regexs.class.getName());
-        return getRegexs(annotationMirror);
+        final AnnotationMirror annotationMirror = parametersAnnotation.get(RegexsReturn.class.getName());
+        return getRegexsReturn(annotationMirror);
     }
 
     /**
-     * 解析方法上面{@link Regexs}注解
+     * 解析方法上面{@link RegexsReturn}注解
      *
      * @param mapperMethods |
      * @return RegexsEntity | null
      */
-    public static RegexsEntity getRegexs(ExecutableElement mapperMethods) {
+    public static RegexsReturnEntity getRegexsReturn(ExecutableElement mapperMethods) {
         if (mapperMethods instanceof Symbol.MethodSymbol) {
             List<? extends AnnotationMirror> annotationMirrors = mapperMethods.getAnnotationMirrors();
             for (AnnotationMirror annotationMirror : annotationMirrors) {
-                if (Regexs.class.getCanonicalName().equals(annotationMirror.getAnnotationType().asElement().toString())) {
-                    return getRegexs(annotationMirror);
+                if (RegexsReturn.class.getCanonicalName().equals(annotationMirror.getAnnotationType().asElement().toString())) {
+                    return getRegexsReturn(annotationMirror);
                 }
             }
         }
@@ -53,31 +53,28 @@ public class RegexsParsing {
 
     /**
      * 注解解析
+     *
      * @param annotationMirror
      * @return
      */
-    private static RegexsEntity getRegexs(final AnnotationMirror annotationMirror) {
+    private static RegexsReturnEntity getRegexsReturn(final AnnotationMirror annotationMirror) {
         if (null != annotationMirror) {
-            RegexsEntity regexsEntity = new RegexsEntity();
+            RegexsReturnEntity regexsReturnEntity = new RegexsReturnEntity();
             final HashMap<String, AnnotationValue> annotationParameters1 = AnnotationUtils.getAnnotationParameters(annotationMirror);
             for (Map.Entry<String, AnnotationValue> valueEntry : annotationParameters1.entrySet()) {
-                if ("matcher".equals(valueEntry.getKey())) {
-                    final String annotationValueForString = AnnotationUtils.getAnnotationValueForString(valueEntry.getValue());
-                    regexsEntity.setMatcher(annotationValueForString);
-                }
                 if ("replaceFirst".equals(valueEntry.getKey())) {
                     final List<Attribute> annotationValueForArray = AnnotationUtils.getAnnotationValueForArray(valueEntry.getValue());
                     final String[] strings = annotationValueForArray.stream().map((x) -> {
                         return (String) (((Attribute.Constant) x).value);
                     }).toArray(String[]::new);
-                    regexsEntity.setReplaceFirst(strings);
+                    regexsReturnEntity.setReplaceFirst(strings);
                 }
                 if ("replaceFirstMap".equals(valueEntry.getKey())) {
                     final List<Attribute> annotationValueForArray = AnnotationUtils.getAnnotationValueForArray(valueEntry.getValue());
-                    final RegexsEntity.RegexEntity[] regexEntities = annotationValueForArray.stream().map(x -> {
+                    final RegexsReturnEntity.RegexReturnEntity[] regexEntities = annotationValueForArray.stream().map(x -> {
                         final AnnotationMirror annotationValueForAnnotation = AnnotationUtils.getAnnotationValueForAnnotation((AnnotationValue) x.getValue());
                         final HashMap<String, AnnotationValue> annotationParameters = AnnotationUtils.getAnnotationParameters(annotationValueForAnnotation);
-                        RegexsEntity.RegexEntity regexEntity = new RegexsEntity.RegexEntity();
+                        RegexsReturnEntity.RegexReturnEntity regexEntity = new RegexsReturnEntity.RegexReturnEntity();
                         for (Map.Entry<String, AnnotationValue> stringAnnotationValueEntry : annotationParameters.entrySet()) {
                             if ("methodsName".equals(stringAnnotationValueEntry.getKey())) {
                                 regexEntity.setMethodsName(AnnotationUtils.getAnnotationValueForString(stringAnnotationValueEntry.getValue()));
@@ -91,15 +88,15 @@ public class RegexsParsing {
                             }
                         }
                         return regexEntity;
-                    }).toArray(RegexsEntity.RegexEntity[]::new);
-                    regexsEntity.setReplaceFirstMap(regexEntities);
+                    }).toArray(RegexsReturnEntity.RegexReturnEntity[]::new);
+                    regexsReturnEntity.setReplaceFirstMap(regexEntities);
                 }
                 if ("replaceFirstCapital".equals(valueEntry.getKey())) {
                     final Boolean annotationValueForBool = AnnotationUtils.getAnnotationValueForBool(valueEntry.getValue());
-                    regexsEntity.setReplaceFirstCapital(annotationValueForBool);
+                    regexsReturnEntity.setReplaceFirstCapital(annotationValueForBool);
                 }
             }
-            return regexsEntity;
+            return regexsReturnEntity;
         }
         return null;
     }

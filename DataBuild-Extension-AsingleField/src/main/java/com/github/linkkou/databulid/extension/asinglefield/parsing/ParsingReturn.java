@@ -2,6 +2,8 @@ package com.github.linkkou.databulid.extension.asinglefield.parsing;
 
 import com.github.linkkou.databulid.extension.asinglefield.annotation.RegexsEntity;
 import com.github.linkkou.databulid.extension.asinglefield.annotation.RegexsParsing;
+import com.github.linkkou.databulid.extension.asinglefield.annotation.RegexsReturnEntity;
+import com.github.linkkou.databulid.extension.asinglefield.annotation.RegexsReturnParsing;
 import com.github.linkkou.databulid.extension.asinglefield.entity.ParametersEntity;
 import com.github.linkkou.databulid.extension.asinglefield.utils.StringAsingUtils;
 import com.github.linkkou.databulid.impl.DefaultCode;
@@ -52,11 +54,8 @@ public class ParsingReturn {
         final TypeMirror methodReturn = MethodUtils.getMethodReturn(this.executableElement);
         final String classTypePath = ClassUtils.getClassTypePath(methodReturn);
         defaultCode.getCreateDefaultCode(stringBuilder, "returnlocalvar", classTypePath);
-        final RegexsEntity regexs = RegexsParsing.getRegexs(this.executableElement);
+        final RegexsReturnEntity regexs = RegexsReturnParsing.getRegexsReturn(this.executableElement);
         ArrayList<ExecutableElement> classAllMembersByPublicAndName;
-        if (null != regexs) {
-            SETTER_PATTERN = Pattern.compile(regexs.getMatcher());
-        }
         classAllMembersByPublicAndName = ClassUtils.getClassAllMembersByPublicAndName(processingEnv, ClassUtils.getClassType(methodReturn), SETTER_PATTERN);
         ParametersEntity parametersEntity = new ParametersEntity();
         parametersEntity.setName("returnlocalvar");
@@ -65,28 +64,33 @@ public class ParsingReturn {
             String sreplaceFirst = s.replaceFirst(SETTER_FIRST_FORMAT, "");
             sreplaceFirst = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst);
             if (null != regexs) {
+                //set默认在不替换
                 for (String regex1 : regexs.getReplaceFirst()) {
-                    sreplaceFirst = s.replaceFirst(regex1, "");
+                    sreplaceFirst = sreplaceFirst.replaceFirst(regex1, "");
                 }
-                for (RegexsEntity.RegexEntity entity : regexs.getReplaceFirstMap()) {
+                //set默认可以被替换
+                for (RegexsReturnEntity.RegexReturnEntity entity : regexs.getReplaceFirstMap()) {
                     if (s.equals(entity.getMethodsName())) {
+                        String sreplaceFirstuser = s;
                         for (String regex2 : entity.getRegex()) {
-                            sreplaceFirst = s.replaceFirst(regex2, "");
+                            sreplaceFirstuser = sreplaceFirstuser.replaceFirst(regex2, "");
                         }
+                        sreplaceFirst = sreplaceFirstuser;
                     }
+
                 }
                 if (regexs.getReplaceFirstCapital()) {
                     sreplaceFirst = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst);
                 } else {
                     sreplaceFirst = StringAsingUtils.toLowerCaseFirstOne(sreplaceFirst);
                 }
+            } else {
+                sreplaceFirst = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst);
             }
             ParametersEntity.VariableMethodParameter parameter = new ParametersEntity.VariableMethodParameter();
             parameter.setOriginalMethodName(s);
             parameter.setMatchingMethodName(sreplaceFirst);
             return parameter;
-
-
         }).collect(Collectors.toList());
         parametersEntity.setVariableMethodParameterList(collect);
         return parametersEntity;
