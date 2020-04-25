@@ -21,9 +21,8 @@ public @interface Regexs {
     /**
      * 将以此作为匹配方法来源
      * <p>
-     * 不写 Regexs 注解情况下，参数默认采用
+     * 不写 Regexs 注解情况下，参数,默认匹配(get|is|to)开头
      * <p>输入参数默认匹配(get|is|to)开头</p>
-     * <p>返回参数默认匹配(set)开头 不可更改</p>
      *
      * @return |
      */

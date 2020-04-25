@@ -65,8 +65,11 @@ public class ParsingReturn {
             sreplaceFirst = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst);
             if (null != regexs) {
                 //set默认在不替换
-                for (String regex1 : regexs.getReplaceFirst()) {
-                    sreplaceFirst = sreplaceFirst.replaceFirst(regex1, "");
+                if (regexs.getReplaceFirst().length > 0) {
+                    sreplaceFirst = s;
+                    for (String s1 : regexs.getReplaceFirst()) {
+                        sreplaceFirst = sreplaceFirst.replaceFirst(s1, "");
+                    }
                 }
                 //set默认可以被替换
                 for (RegexsReturnEntity.RegexReturnEntity entity : regexs.getReplaceFirstMap()) {
@@ -84,8 +87,6 @@ public class ParsingReturn {
                 } else {
                     sreplaceFirst = StringAsingUtils.toLowerCaseFirstOne(sreplaceFirst);
                 }
-            } else {
-                sreplaceFirst = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst);
             }
             ParametersEntity.VariableMethodParameter parameter = new ParametersEntity.VariableMethodParameter();
             parameter.setOriginalMethodName(s);

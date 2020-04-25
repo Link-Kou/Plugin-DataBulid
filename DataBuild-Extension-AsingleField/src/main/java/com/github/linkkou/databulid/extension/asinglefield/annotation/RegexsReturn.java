@@ -19,10 +19,9 @@ import java.lang.annotation.Target;
 public @interface RegexsReturn {
 
     /**
-     * 返回参数,进行首字母去除
+     * 返回参数,进行所有方法进行首字母去除
      * <p>
-     * 不写 Regexs 注解情况下，参数默认采用
-     * <p>返回参数默认匹配(set)开头 不可更改</p>
+     * 不写 Regexs 注解情况下，参数默认采用(set)开头
      *
      * @return |
      */
@@ -31,8 +30,7 @@ public @interface RegexsReturn {
     /**
      * 单独实现字段名称处理
      * 如果方法写入而且匹配到了,replaceFirst将不再执行
-     * 返回参数都有效果,可以替换默认(set)
-     *
+     * 与 replaceFirst 是二选一的关系
      * @return |
      */
     Regex[] replaceFirstMap() default {};

@@ -53,10 +53,13 @@ public class ParsingParameters {
                 for (String s : GETTER_FIRST_FORMAT) {
                     sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
                 }
+                sreplaceFirst1 = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst1);
                 if (null != regexs) {
-                    sreplaceFirst1 = s1;
-                    for (String s : regexs.getReplaceFirst()) {
-                        sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
+                    if (regexs.getReplaceFirst().length > 0) {
+                        sreplaceFirst1 = s1;
+                        for (String s : regexs.getReplaceFirst()) {
+                            sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
+                        }
                     }
                     for (RegexsEntity.RegexEntity regexEntity : regexs.getReplaceFirstMap()) {
                         if (s1.equals(regexEntity.getMethodsName())) {
@@ -75,8 +78,6 @@ public class ParsingParameters {
                     } else {
                         sreplaceFirst1 = StringAsingUtils.toLowerCaseFirstOne(sreplaceFirst1);
                     }
-                } else {
-                    sreplaceFirst1 = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst1);
                 }
                 ParametersEntity.VariableMethodParameter parameter = new ParametersEntity.VariableMethodParameter();
                 parameter.setOriginalMethodName(s1);
