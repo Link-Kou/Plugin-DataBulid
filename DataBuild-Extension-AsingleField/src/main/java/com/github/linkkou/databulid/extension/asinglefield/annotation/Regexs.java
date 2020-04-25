@@ -80,6 +80,12 @@ public @interface Regexs {
          * @return
          */
         String[] regex();
+
+        /**
+         * 重命名
+         * @return
+         */
+        String rename() default "";
     }
 
 }

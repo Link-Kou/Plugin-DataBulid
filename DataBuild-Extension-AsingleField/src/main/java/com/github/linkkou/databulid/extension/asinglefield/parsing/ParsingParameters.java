@@ -54,6 +54,7 @@ public class ParsingParameters {
                     sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
                 }
                 if (null != regexs) {
+                    sreplaceFirst1 = s1;
                     for (String s : regexs.getReplaceFirst()) {
                         sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
                     }
@@ -62,6 +63,9 @@ public class ParsingParameters {
                             String sreplaceFirstuser = s1;
                             for (String s : regexEntity.getRegex()) {
                                 sreplaceFirstuser = sreplaceFirstuser.replaceFirst(s, "");
+                            }
+                            if (!"".equals(regexEntity.getRename().trim())) {
+                                sreplaceFirstuser = sreplaceFirstuser.replaceAll(sreplaceFirstuser, regexEntity.getRename());
                             }
                             sreplaceFirst1 = sreplaceFirstuser;
                         }

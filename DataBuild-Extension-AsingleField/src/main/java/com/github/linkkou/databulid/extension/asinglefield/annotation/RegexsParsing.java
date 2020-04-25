@@ -89,6 +89,9 @@ public class RegexsParsing {
                                 }).toArray(String[]::new);
                                 regexEntity.setRegex(strings);
                             }
+                            if("rename".equals(stringAnnotationValueEntry.getKey())){
+                                regexEntity.setRename(AnnotationUtils.getAnnotationValueForString(stringAnnotationValueEntry.getValue()));
+                            }
                         }
                         return regexEntity;
                     }).toArray(RegexsEntity.RegexEntity[]::new);

@@ -80,6 +80,13 @@ public class RegexsEntity {
          */
         String[] regex;
 
+        /**
+         * 重命名
+         *
+         * @return
+         */
+        String rename;
+
         public String getMethodsName() {
             return methodsName;
         }
@@ -95,6 +102,15 @@ public class RegexsEntity {
 
         public RegexEntity setRegex(String[] regex) {
             this.regex = regex;
+            return this;
+        }
+
+        public String getRename() {
+            return rename;
+        }
+
+        public RegexEntity setRename(String rename) {
+            this.rename = rename;
             return this;
         }
     }
