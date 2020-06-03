@@ -13,12 +13,12 @@
 
 ### 在线安装
 
- ```xml：
+ ```xml
 
  <dependency>
    <groupId>com.github.link-kou</groupId>
    <artifactId>databulid-all</artifactId>
-   <version>1.0.0</version>
+   <version>1.0.1</version>
  </dependency>
 
  ```
@@ -38,7 +38,7 @@
 
 ### 一、示列
 
-```java：
+```java
 
     @MappersField
     ProductVO fromToProductVO(ProductDomain product);

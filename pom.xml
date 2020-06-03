@@ -7,7 +7,7 @@
     <groupId>com.github.link-kou</groupId>
     <artifactId>databulid</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <modules>
         <module>DataBuild-Core</module>
         <module>DataBuild-Extension-AsingleField</module>

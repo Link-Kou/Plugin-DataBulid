@@ -5,12 +5,12 @@
     <parent>
         <groupId>com.github.link-kou</groupId>
         <artifactId>databulid</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>databulid-extension-asinglefield</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>Plugin-DataBulid-Extension-AsingleField-${project.version}</name>
     <url>http://maven.apache.org</url>
 
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.github.link-kou</groupId>
             <artifactId>databulid-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
