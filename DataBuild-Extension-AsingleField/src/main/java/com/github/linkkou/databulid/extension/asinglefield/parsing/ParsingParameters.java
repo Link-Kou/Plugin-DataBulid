@@ -1,5 +1,6 @@
 package com.github.linkkou.databulid.extension.asinglefield.parsing;
 
+import com.github.linkkou.databulid.extension.asinglefield.annotation.ExcludeParsing;
 import com.github.linkkou.databulid.extension.asinglefield.annotation.RegexsEntity;
 import com.github.linkkou.databulid.extension.asinglefield.annotation.RegexsParsing;
 import com.github.linkkou.databulid.extension.asinglefield.entity.ParametersEntity;
@@ -40,20 +41,32 @@ public class ParsingParameters {
         this.processingEnv = processingEnv;
     }
 
-
+    /**
+     * 解析
+     *
+     * @return 数组
+     */
     public List<ParametersEntity> parsing() {
         final List<? extends VariableElement> methodParameters = MethodUtils.getMethodParameters(this.executableElement);
         List<ParametersEntity> parametersEntitys = new ArrayList<ParametersEntity>();
+        //遍历所有参数
         for (VariableElement methodParameter : methodParameters) {
             final RegexsEntity regexs = RegexsParsing.getRegexs(methodParameter);
-            final ArrayList<ExecutableElement> classAllMembersByPublicAndName = ClassUtils.getClassAllMembersByPublicAndName(processingEnv, ClassUtils.getClassType(ParametersUtils.getParametersType(methodParameter)), GETTER_PATTERN);
+            //自定义匹配方法
+            ArrayList<ExecutableElement> classAllMembersByPublicAndName = getAllMembersByPublicAndName(regexs, methodParameter);
             final List<ParametersEntity.VariableMethodParameter> collect = classAllMembersByPublicAndName.stream().map(x -> {
                 String s1 = x.getSimpleName().toString();
+                //排除
+                final boolean excludeMembers = getExcludeMembers(methodParameter, s1);
+                if (excludeMembers) {
+                    return new ParametersEntity.VariableMethodParameter();
+                }
                 String sreplaceFirst1 = s1;
                 for (String s : GETTER_FIRST_FORMAT) {
                     sreplaceFirst1 = sreplaceFirst1.replaceFirst(s, "");
                 }
                 sreplaceFirst1 = StringAsingUtils.toUpperCaseFirstOne(sreplaceFirst1);
+                //注解用户自定义参数
                 if (null != regexs) {
                     if (regexs.getReplaceFirst().length > 0) {
                         sreplaceFirst1 = s1;
@@ -92,5 +105,37 @@ public class ParsingParameters {
         return parametersEntitys;
     }
 
+    /**
+     * 获取到所有的方法
+     *
+     * @param regexs          注解实体
+     * @param methodParameter 方法
+     * @return 数组
+     */
+    private ArrayList<ExecutableElement> getAllMembersByPublicAndName(final RegexsEntity regexs, final VariableElement methodParameter) {
+        //自定义匹配方法
+        ArrayList<ExecutableElement> classAllMembersByPublicAndName = ClassUtils.getClassAllMembersByPublicAndName(
+                processingEnv, ClassUtils.getClassType(ParametersUtils.getParametersType(methodParameter)), GETTER_PATTERN);
+        if (null != regexs) {
+            final String matcher = regexs.getMatcher();
+            if (null != matcher && matcher.length() > 0) {
+                classAllMembersByPublicAndName = ClassUtils.getClassAllMembersByPublicAndName(
+                        processingEnv, ClassUtils.getClassType(ParametersUtils.getParametersType(methodParameter)), Pattern.compile(regexs.getMatcher()));
+            }
+        }
+        return classAllMembersByPublicAndName;
+    }
 
+    /**
+     * 排除
+     *
+     * @param methodParameter 对象
+     * @param methodName      方法
+     * @return boolean true为排除
+     */
+    private boolean getExcludeMembers(VariableElement methodParameter, String methodName) {
+        final List<String> exclude = ExcludeParsing.getExclude(methodParameter);
+        final long count = exclude.stream().filter(x -> x.equals(methodName)).count();
+        return count > 1;
+    }
 }

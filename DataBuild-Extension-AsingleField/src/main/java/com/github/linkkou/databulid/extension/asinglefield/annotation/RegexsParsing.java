@@ -53,6 +53,7 @@ public class RegexsParsing {
 
     /**
      * 注解解析
+     *
      * @param annotationMirror
      * @return
      */
@@ -61,6 +62,10 @@ public class RegexsParsing {
             RegexsEntity regexsEntity = new RegexsEntity();
             final HashMap<String, AnnotationValue> annotationParameters1 = AnnotationUtils.getAnnotationParameters(annotationMirror);
             for (Map.Entry<String, AnnotationValue> valueEntry : annotationParameters1.entrySet()) {
+                if ("matcher".equals(valueEntry.getKey())) {
+                    final String annotationValueForString = AnnotationUtils.getAnnotationValueForString(valueEntry.getValue());
+                    regexsEntity.setMatcher(annotationValueForString);
+                }
                 if ("replaceFirst".equals(valueEntry.getKey())) {
                     final List<Attribute> annotationValueForArray = AnnotationUtils.getAnnotationValueForArray(valueEntry.getValue());
                     final String[] strings = annotationValueForArray.stream().map((x) -> {
@@ -85,7 +90,7 @@ public class RegexsParsing {
                                 }).toArray(String[]::new);
                                 regexEntity.setRegex(strings);
                             }
-                            if("rename".equals(stringAnnotationValueEntry.getKey())){
+                            if ("rename".equals(stringAnnotationValueEntry.getKey())) {
                                 regexEntity.setRename(AnnotationUtils.getAnnotationValueForString(stringAnnotationValueEntry.getValue()));
                             }
                         }

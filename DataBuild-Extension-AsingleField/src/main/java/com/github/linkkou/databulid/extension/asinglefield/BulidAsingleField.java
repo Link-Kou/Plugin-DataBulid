@@ -47,6 +47,7 @@ public class BulidAsingleField implements DataBuildSpi {
         this.processingEnv = processingEnv;
         final ParametersEntity parametersEntity = parsingReturn(defaultCode);
         final List<ParametersEntity> parametersEntity1 = parsingParameters();
+        //对比字段，生成代码
         parametersEntity.getVariableMethodParameterList().stream().forEach(x -> {
             parametersEntity1.forEach(x1 -> {
                 x1.getVariableMethodParameterList().stream().forEach(x2 -> {
@@ -72,7 +73,7 @@ public class BulidAsingleField implements DataBuildSpi {
     /**
      * 获取到参数
      *
-     * @return
+     * @return list
      */
     private List<ParametersEntity> parsingParameters() {
         ParsingParameters parsingParameters = new ParsingParameters(executableElement, processingEnv);

@@ -33,6 +33,16 @@ public class MethodUtils {
     }
 
     /**
+     * 是否为Void返回
+     *
+     * @param typeMirror 对象
+     * @return boolean
+     */
+    public static boolean isVoid(TypeMirror typeMirror) {
+        return typeMirror instanceof Type.JCVoidType;
+    }
+
+    /**
      * 获取到方法上的参数
      *
      * @param mapperMethods 方法对象

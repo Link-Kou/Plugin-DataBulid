@@ -4,6 +4,7 @@ import com.github.linkkou.databulid.utils.MethodUtils;
 import com.sun.tools.javac.code.Symbol;
 
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.TypeMirror;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,6 +30,7 @@ public class DefaultCodeImpl implements DefaultCode {
     @Override
     public void getCreateDefaultCode(StringBuilder stringBuilder, String varName, String classTypePath) {
         if (this.isDefault()) {
+            //默认接口上实现注解，进行解析
             String classname = ((Symbol.MethodSymbol) executableElement).owner.name.toString();
             String parameterarray = IntStream.range(0, parameterlist.size()).filter(x -> {
                 //是奇数
@@ -49,11 +51,15 @@ public class DefaultCodeImpl implements DefaultCode {
 
     @Override
     public String getSuper() {
+        final TypeMirror methodReturn = MethodUtils.getMethodReturn(executableElement);
         String classname = ((Symbol.MethodSymbol) executableElement).owner.name.toString();
         String parameterarray = IntStream.range(0, parameterlist.size()).filter(x -> {
             //是奇数
             return (x & 1) == 1;
         }).mapToObj(x -> parameterlist.get(x)).collect(Collectors.joining(","));
+        if (MethodUtils.isVoid(methodReturn)) {
+            return String.format("%s.super.%s(%s)", classname, executableElement.getSimpleName().toString(), parameterarray);
+        }
         return String.format("return %s.super.%s(%s)", classname, executableElement.getSimpleName().toString(), parameterarray);
     }
 

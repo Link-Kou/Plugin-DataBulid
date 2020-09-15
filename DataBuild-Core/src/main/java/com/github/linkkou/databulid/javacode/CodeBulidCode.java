@@ -78,16 +78,6 @@ public class CodeBulidCode extends CodeBulidExtension {
      * @param parameterlist     参数
      */
     private DefaultCode createDefaultCode(ExecutableElement executableElement, final List<String> parameterlist) {
-       /* String code = "";
-        if (MethodUtils.isDefault(executableElement)) {
-            String classname = ((Symbol.MethodSymbol) executableElement).owner.name.toString();
-            String parameterarray = IntStream.range(0, parameterlist.size()).filter(x -> {
-                //是奇数
-                return (x & 1) == 1;
-            }).mapToObj(x -> parameterlist.get(x)).collect(Collectors.joining(","));
-            code = String.format("%s.super.%s(%s);", classname, executableElement.getSimpleName().toString(), parameterarray);
-        }
-        return code;*/
         return new DefaultCodeImpl(executableElement, parameterlist);
     }
 }
