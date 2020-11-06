@@ -204,7 +204,7 @@
                     </archive>
                 </configuration>
             </plugin>
-            <!--IDEA 上传打开  签名 -->
+            <!--此项目必须采用 IDEA 上传打开  签名 -->
             <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>

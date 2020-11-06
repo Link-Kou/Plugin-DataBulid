@@ -3,7 +3,7 @@
 ### Plugin-DataBulid 能做什么？
 
 > 基于注解，进行Bean to Bean 的转换
->
+> 基于注解，对所有转换进行归类
 
 ---
 
@@ -18,7 +18,7 @@
  <dependency>
    <groupId>com.github.link-kou</groupId>
    <artifactId>databulid-all</artifactId>
-   <version>1.0.1</version>
+   <version>1.0.2</version>
  </dependency>
 
  ```
@@ -41,12 +41,153 @@
  5、基于方法进行匹配
  6、扩展性
 
-### 一、示列
+### 一、案例说明示列
+```java
+
+/**
+ * 菜单管理(OrgMenus)实体类
+ *
+ * @author lk
+ * @since 2020-05-28 18:22:11
+ */
+@Data
+@Accessors(chain = true)
+public class MenusVO {
+
+    private String id;
+    /**
+     * 菜单名称
+     */
+    private String title;
+    /**
+     * key
+     */
+    private String keyId;
+    /**
+     * 父id
+     */
+    private String parentId;
+    /**
+     * 上一个节点id
+     */
+    private String preId;
+    /**
+     * 类型
+     */
+    private Integer type;
+    /**
+     * 参数
+     */
+    private String param;
+
+    private BoolTypeEnum deleted;
+    /**
+     * 创建时间
+     */
+    private Date createtime;
+    private Date updatedtime;
+}
+
+```
 
 ```java
 
-    @MappersField
-    ProductVO fromToProductVO(ProductDomain product);
+/**
+ * 菜单管理(OrgMenus)实体类
+ *
+ * @author lk
+ * @since 2020-05-28 18:22:11
+ */
+@Data
+@Accessors(chain = true)
+public class OrgMenusDomain {
+
+    private Integer frows;
+    private String fId;
+    /**
+     * 菜单名称
+     */
+    private String fTitle;
+    /**
+     * key
+     */
+    private String fKey;
+    /**
+     * 父id
+     */
+    private String fParent;
+    /**
+     * 上一个节点id
+     */
+    private String fPreid;
+    /**
+     * 参数
+     */
+    private String fParam;
+    /**
+     * 类型
+     */
+    private Integer fType;
+
+    /**
+     * 1 表示删除，0 表示未删除。
+     */
+    private BoolTypeEnum isDeleted;
+    /**
+     * 创建时间
+     */
+    private Date createtime;
+    private Date updatedtime;
+}
+
+```
+
+```java
+
+    /**
+     * @author lk
+     * @version 1.0
+     * @date 2020/5/11 19:15
+     */
+    @Mappers
+    public interface ToFromMenuMapping {
+    
+        @MappersField
+        MenusVO fromToMenusVO(
+                @Regexs(replaceFirstMap = {
+                        @Regexs.Regex(methodsName = "getFParent", regex = {""}, rename = "ParentId"),
+                        @Regexs.Regex(methodsName = "getFKey", regex = {""}, rename = "KeyId"),
+                        @Regexs.Regex(methodsName = "getFPreid", regex = {""}, rename = "PreId"),
+                        @Regexs.Regex(methodsName = "getIsDeleted", regex = {""}, rename = "Deleted")
+                }) OrgMenusDomain orgMenusDomain);
+        
+        @MappersField
+        MenusVO fromToMenusVO(MenusDTO menusdto);
+    
+    
+    }
+
+```
+
+```java
+
+@Component
+public class ToFromMenuMappingImpl implements ToFromMenuMapping {
+    public MenusVO fromToMenusVO(OrgMenusDomain orgMenusDomain) {
+        MenusVO returnlocalvar = new MenusVO();
+        returnlocalvar.setId(orgMenusDomain.getFId());
+        returnlocalvar.setTitle(orgMenusDomain.getFTitle());
+        returnlocalvar.setKeyId(orgMenusDomain.getFKey());
+        returnlocalvar.setParentId(orgMenusDomain.getFParent());
+        returnlocalvar.setPreId(orgMenusDomain.getFPreid());
+        returnlocalvar.setType(orgMenusDomain.getFType());
+        returnlocalvar.setParam(orgMenusDomain.getFParam());
+        returnlocalvar.setDeleted(orgMenusDomain.getIsDeleted());
+        returnlocalvar.setCreatetime(orgMenusDomain.getCreatetime());
+        returnlocalvar.setUpdatedtime(orgMenusDomain.getUpdatedtime());
+        return returnlocalvar;
+    }
+}
 
 ```
 

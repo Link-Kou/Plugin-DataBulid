@@ -36,7 +36,7 @@ public class ExcludeParsing {
         if (null != annotationMirror) {
             final HashMap<String, AnnotationValue> annotationParameters1 = AnnotationUtils.getAnnotationParameters(annotationMirror);
             for (Map.Entry<String, AnnotationValue> valueEntry : annotationParameters1.entrySet()) {
-                if ("replaceFirst".equals(valueEntry.getKey())) {
+                if ("methodsName".equals(valueEntry.getKey())) {
                     final List<Attribute> annotationValueForArray = AnnotationUtils.getAnnotationValueForArray(valueEntry.getValue());
                     final List<String> collect = annotationValueForArray.stream().map((x) -> {
                         return (String) (((Attribute.Constant) x).value);

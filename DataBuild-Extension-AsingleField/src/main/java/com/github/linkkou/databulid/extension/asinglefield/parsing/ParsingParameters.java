@@ -136,6 +136,6 @@ public class ParsingParameters {
     private boolean getExcludeMembers(VariableElement methodParameter, String methodName) {
         final List<String> exclude = ExcludeParsing.getExclude(methodParameter);
         final long count = exclude.stream().filter(x -> x.equals(methodName)).count();
-        return count > 1;
+        return count > 0;
     }
 }
